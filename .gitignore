@@ -10,3 +10,13 @@ wheels/
 .venv
 venv
 setup.cfg
+
+# IDE settings
+.vscode/
+
+# Logs
+*.log
+
+# Environment files
+.env
+*.env
