@@ -24,3 +24,5 @@ We need to use the GEN-AI capabilities. We can use either classical OR agentic R
 2. Custom Exception
 3. Utils/Config Loader
 4. Utils/ Model Loader
+
+5. Config/Config.Yaml --- This could be configured in Dynamo DB

@@ -19,4 +19,6 @@ setup.cfg
 
 # Environment files
 .env
-*.env.*
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoinys/

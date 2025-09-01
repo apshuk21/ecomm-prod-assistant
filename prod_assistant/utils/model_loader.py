@@ -3,7 +3,9 @@ import sys
 import json
 from dotenv import load_dotenv
 from prod_assistant.utils.config_loader import load_config
-from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import OpenAIEmbeddings
+from langchain.chat_models import init_chat_model
 from langchain_groq import ChatGroq
 from prod_assistant.logger import GLOBAL_LOGGER as log
 from prod_assistant.exception.custom_exception import ProductAssistantException
@@ -11,7 +13,7 @@ import asyncio
 
 
 class ApiKeyManager:
-    REQUIRED_KEYS = ["GROQ_API_KEY", "GOOGLE_API_KEY"]
+    REQUIRED_KEYS = ["GROQ_API_KEY", "GOOGLE_API_KEY", "OPENAI_API_KEY"]
 
     def __init__(self):
         self.api_keys = {}
@@ -82,9 +84,9 @@ class ModelLoader:
             except RuntimeError:
                 asyncio.set_event_loop(asyncio.new_event_loop())
 
-            return GoogleGenerativeAIEmbeddings(
+            return OpenAIEmbeddings(
                 model=model_name,
-                google_api_key=self.api_key_mgr.get("GOOGLE_API_KEY"),  # type: ignore
+                api_key=self.api_key_mgr.get("OPENAI_API_KEY"),  # type: ignore
             )
         except Exception as e:
             log.error("Error loading embedding model", error=str(e))
@@ -124,13 +126,20 @@ class ModelLoader:
                 temperature=temperature,
             )
 
-        # elif provider == "openai":
-        #     return ChatOpenAI(
-        #         model=model_name,
-        #         api_key=self.api_key_mgr.get("OPENAI_API_KEY"),
-        #         temperature=temperature,
-        #         max_tokens=max_tokens
-        #     )
+        elif provider == "openai":
+            # return ChatOpenAI(
+            #     model=model_name,
+            #     api_key=self.api_key_mgr.get("OPENAI_API_KEY"),
+            #     temperature=temperature,
+            #     max_tokens=max_tokens,
+            # )
+            return init_chat_model(
+                model=model_name,
+                model_provider=provider,
+                temperature=temperature,
+                api_key=self.api_key_mgr.get("OPENAI_API_KEY"),
+                max_tokens=max_tokens,
+            )
 
         else:
             log.error("Unsupported LLM provider", provider=provider)
