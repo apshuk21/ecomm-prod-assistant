@@ -19,4 +19,4 @@ setup.cfg
 
 # Environment files
 .env
-*.env
+*.env.*
