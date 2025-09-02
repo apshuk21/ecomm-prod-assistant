@@ -22,7 +22,7 @@ product_description = st.text_area(
 st.subheader("🛒 Product Names")
 updated_inputs = []
 for i, val in enumerate(st.session_state.product_inputs):
-    input_val = st.text_input(f"Product {i+1}", value=val, key=f"product_{i}")
+    input_val = st.text_input(f"Product {i + 1}", value=val, key=f"product_{i}")
     updated_inputs.append(input_val)
 st.session_state.product_inputs = updated_inputs
 

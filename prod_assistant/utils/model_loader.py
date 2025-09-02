@@ -13,7 +13,7 @@ import asyncio
 
 
 class ApiKeyManager:
-    REQUIRED_KEYS = ["GROQ_API_KEY", "GOOGLE_API_KEY", "OPENAI_API_KEY"]
+    REQUIRED_KEYS = ["OPENAI_API_KEY"]
 
     def __init__(self):
         self.api_keys = {}
@@ -36,9 +36,12 @@ class ApiKeyManager:
                 if env_val:
                     self.api_keys[key] = env_val
                     log.info(f"Loaded {key} from individual env var")
+        log.info(f"self.REQUIRED_KEYS are {self.REQUIRED_KEYS}")
+        log.info(f"self.api_keys are {self.api_keys}")
 
         # Final check
         missing = [k for k in self.REQUIRED_KEYS if not self.api_keys.get(k)]
+
         if missing:
             log.error("Missing required API keys", missing_keys=missing)
             raise ProductAssistantException("Missing API keys", sys)
